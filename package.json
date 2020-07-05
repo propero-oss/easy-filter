@@ -1,0 +1,37 @@
+{
+  "name": "@propero/easy-filter",
+  "version": "1.0.0",
+  "description": "Simple parsing and serialization of filter urls",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "propero",
+    "easy",
+    "filter",
+    "parser",
+    "serializer"
+  ],
+  "author": "Merlin Reichwald <merlin.reichwald@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "@wessberg/rollup-plugin-ts": "^1.2.24",
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "jest": "^26.0.1",
+    "jest-preset-typescript": "^1.2.0",
+    "prettier": "^2.0.5",
+    "rollup": "^2.13.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-sourcemaps": "^0.6.2",
+    "rollup-plugin-ts-paths": "^1.0.5",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.5"
+  }
+}
