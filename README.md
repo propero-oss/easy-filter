@@ -1,6 +1,7 @@
 # Easy Filter
 
-
+[![Maintainability](https://api.codeclimate.com/v1/badges/0ccb2322f2d966cd0703/maintainability)](https://codeclimate.com/github/propero-oss/easy-filter/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0ccb2322f2d966cd0703/test_coverage)](https://codeclimate.com/github/propero-oss/easy-filter/test_coverage)
 
 ```shell
 npm i @propero/easy-filter
