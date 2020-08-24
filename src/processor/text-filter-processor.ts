@@ -11,17 +11,17 @@ export function textFilterProcessor(
     alias,
     operator,
     validateParams(...params): boolean {
-      return params.length > 1 && params.length < 4 && !params.find(it => typeof it !== "string");
+      return params.length > 1 && params.length < 4 && !params.find((it) => typeof it !== "string");
     },
     process(next: (raw: UnprocessedFilter) => Filter, ...params): TextFilter<any, any> {
       const [field, value, ci] = params as string[];
       return helper(field, value, ci === "ci");
     },
-    serializeParams(next: (filter: Filter) => string, filter: TextFilter<any, any>): string[] {
+    serializeParams(next: (filter: Filter) => string, escape: (str: string) => string, filter: TextFilter<any, any>): string[] {
       const { field, value, ci } = filter;
-      if (ci) return [field, value, "ci"];
-      return [field, value];
-    }
+      if (ci) return [field, value, "ci"].map(escape);
+      return [field, value].map(escape);
+    },
   };
 }
 

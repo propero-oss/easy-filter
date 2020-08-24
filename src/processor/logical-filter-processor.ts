@@ -11,14 +11,14 @@ export function logicalSetFilterProcessor(
     operator,
     alias,
     validateParams(...params): boolean {
-      return !!params.find(it => typeof it === "string");
+      return !params.find((it) => typeof it === "string");
     },
     process(next: (raw: UnprocessedFilter) => Filter, ...params): LogicalSetFilter {
       return helper((params as UnprocessedFilter[]).map(next));
     },
-    serializeParams(next: (filter: Filter) => string, filter: LogicalSetFilter): string[] {
+    serializeParams(next: (filter: Filter) => string, escape: (str: string) => string, filter: LogicalSetFilter): string[] {
       return filter.filters.map(next);
-    }
+    },
   };
 }
 
@@ -33,7 +33,7 @@ export const notProcessor: FilterProcessor<LogicalNotFilter> = {
   process(next: (raw: UnprocessedFilter) => Filter, ...params: (string | UnprocessedFilter)[]): LogicalNotFilter {
     return not(next(params[0] as UnprocessedFilter));
   },
-  serializeParams(next: (filter: Filter) => string, filter: LogicalNotFilter): string[] {
+  serializeParams(next: (filter: Filter) => string, escape: (str: string) => string, filter: LogicalNotFilter): string[] {
     return [next(filter.filter)];
-  }
+  },
 };

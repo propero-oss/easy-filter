@@ -11,16 +11,16 @@ export function setFilterProcessor(
     alias,
     operator,
     validateParams(...params): boolean {
-      return params.length > 1 && !params.find(it => typeof it !== "string");
+      return params.length > 1 && !params.find((it) => typeof it !== "string");
     },
     process(next: (raw: UnprocessedFilter) => Filter, ...params): SetFilter<any, any> {
       const [field, ...items] = params;
       return helper(field, items);
     },
-    serializeParams(next: (filter: Filter) => string, filter: SetFilter<any, any>): string[] {
+    serializeParams(next: (filter: Filter) => string, escape: (str: string) => string, filter: SetFilter<any, any>): string[] {
       const { field, items } = filter;
-      return [field, ...items];
-    }
+      return [field, ...items].map(escape);
+    },
   };
 }
 
@@ -38,9 +38,9 @@ export function setValueFilterProcessor(
     process(next: (raw: UnprocessedFilter) => Filter, ...params): SetValueFilter<any> {
       return helper(params[0] as string);
     },
-    serializeParams(next: (filter: Filter) => string, filter: SetValueFilter<any>): string[] {
-      return [filter.field];
-    }
+    serializeParams(next: (filter: Filter) => string, escape: (str: string) => string, filter: SetValueFilter<any>): string[] {
+      return [escape(filter.field)];
+    },
   };
 }
 
