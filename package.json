@@ -1,10 +1,22 @@
 {
   "name": "@propero/easy-filter",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Simple parsing and serialization of filter urls",
-  "main": "dist/main.js",
+  "since": "2020",
+  "main": "dist/easy-filter.cjs.js",
+  "module": "dist/easy-filter.esm.js",
+  "unpkg": "dist/easy-filter.umd.js",
+  "browser": "dist/easy-filter.iife.js",
+  "types": "dist/easy-filter.esm.d.ts",
   "scripts": {
-    "test": "jest"
+    "build": "rollup -c rollup.config.js",
+    "build:watch": "rollup -wc rollup.config.js",
+    "start": "node dist/easy-filter.cjs.js",
+    "clean": "rimraf dist temp docs coverage",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint --ignore-path .gitignore --ext .ts .",
+    "lint:fix": "eslint --ignore-path .gitignore --ext .ts . --fix"
   },
   "keywords": [
     "propero",
@@ -13,25 +25,69 @@
     "parser",
     "serializer"
   ],
-  "author": "Merlin Reichwald <merlin.reichwald@gmail.com>",
+  "author": "Propero Team <team@propero.dev>",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^25.2.3",
-    "@typescript-eslint/eslint-plugin": "^3.1.0",
-    "@typescript-eslint/parser": "^3.1.0",
-    "@wessberg/rollup-plugin-ts": "^1.2.24",
-    "eslint": "^7.1.0",
+    "@commitlint/cli": "^10.0.0",
+    "@commitlint/config-conventional": "^10.0.0",
+    "@rollup/plugin-commonjs": "^14.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.0.7",
+    "@semantic-release/npm": "^7.0.5",
+    "@semantic-release/release-notes-generator": "^9.0.1",
+    "@types/express": "^4.17.7",
+    "@types/jest": "^26.0.7",
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^3.7.1",
+    "@typescript-eslint/parser": "^3.7.1",
+    "@wessberg/rollup-plugin-ts": "^1.2.31",
+    "dotenv-flow": "^3.2.0",
+    "eslint": "^7.5.0",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "jest": "^26.0.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "jest": "^26.1.0",
     "jest-preset-typescript": "^1.2.0",
+    "lint-staged": "^10.2.11",
+    "lodash": "^4.17.20",
     "prettier": "^2.0.5",
-    "rollup": "^2.13.1",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup": "^2.23.0",
     "rollup-plugin-sourcemaps": "^0.6.2",
+    "rollup-plugin-terser": "^7.0.0",
     "rollup-plugin-ts-paths": "^1.0.5",
-    "ts-jest": "^26.1.0",
-    "typescript": "^3.9.5"
-  }
+    "semantic-release": "^17.1.1",
+    "ts-jest": "^26.1.4",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -g .commitlint.config.json -eV ./.git/COMMIT_EDITMSG"
+    }
+  },
+  "lint-staged": {
+    "*.{ts}": [
+      "eslint --ignore-path .gitignore --ext .ts"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/propero-oss/easy-filter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/propero-oss/easy-filter/issues"
+  },
+  "homepage": "https://github.com/propero-oss/easy-filter#readme"
 }

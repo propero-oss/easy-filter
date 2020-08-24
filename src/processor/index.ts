@@ -13,7 +13,7 @@ import {
   notLikeProcessor,
   notMatchProcessor,
   notStartsWithProcessor,
-  startsWithProcessor
+  startsWithProcessor,
 } from "./text-filter-processor";
 
 export * from "./comparison-filter-processor";
@@ -47,9 +47,9 @@ export const defaultProcessors: FilterProcessor[] = [
   startsWithProcessor,
   notStartsWithProcessor,
   endsWithProcessor,
-  notEndsWithProcessor
+  notEndsWithProcessor,
 ];
 
 export const defaultProcessorMap: Record<string, FilterProcessor> = defaultProcessors
-  .map(processor => [processor.operator, processor] as const)
-  .reduce((all, [op, processor]) => ({...all, [op]: processor }), {});
+  .map((processor) => [processor.operator, processor] as const)
+  .reduce((all, [op, processor]) => ({ ...all, [op]: processor }), {});

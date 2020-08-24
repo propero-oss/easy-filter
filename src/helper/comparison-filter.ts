@@ -1,7 +1,5 @@
-import { ComparisonFilter } from "../types";
+import { ComparisonFilter, LogicalSetFilter } from "../types";
 import { and } from "./logical-filter";
-
-
 
 /**
  * Creates a greater-than comparison filter object for use in filter serialization
@@ -19,7 +17,6 @@ export function gt<T, K>(field: K, value: K extends keyof T ? T[K] : any): Compa
 export function lt<T, K>(field: K, value: K extends keyof T ? T[K] : any): ComparisonFilter<T, K> {
   return { op: "lt", field, value };
 }
-
 
 /**
  * Creates a greater-or-equal comparison filter object for use in filter serialization
@@ -61,6 +58,6 @@ export function ne<T, K>(field: K, value: K extends keyof T ? T[K] : any): Compa
  * @param lower - The value (or field) of the lower bounds the field has to conform to
  * @param upper - The value (or field) of the upper bounds the field has to conform to
  */
-export function bt<T, K>(field: K, lower: K extends keyof T ? T[K] : any, upper: K extends keyof T ? T[K] : any) {
+export function bt<T, K>(field: K, lower: K extends keyof T ? T[K] : any, upper: K extends keyof T ? T[K] : any): LogicalSetFilter<T> {
   return and(ge(field, lower), lt(field, upper));
 }

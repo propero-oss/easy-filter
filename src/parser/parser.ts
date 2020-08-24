@@ -4,13 +4,7 @@ import { FilterParserToken, FilterProcessor, UnprocessedFilter } from "./types";
 import { TOKEN_PARAMS_START, TOKEN_PARAMS_END, TOKEN_PARAMS_SEPARATOR } from "./constants";
 import { UnsupportedOperationError, IllegalArgumentsError } from "../errors";
 
-
-
 export class FilterParser {
-  static readonly TOKEN_PARAMS_START = TOKEN_PARAMS_START;
-  static readonly TOKEN_PARAMS_END = TOKEN_PARAMS_END;
-  static readonly TOKEN_PARAMS_SEPARATOR = TOKEN_PARAMS_SEPARATOR;
-
   protected readonly tokenLookup: Record<string, FilterParserToken>;
   protected readonly processorMap: Record<string, FilterProcessor>;
   protected readonly processorAliasMap: Record<string, FilterProcessor>;
@@ -26,24 +20,24 @@ export class FilterParser {
     this.tokenLookup = {
       [paramsStartChar]: TOKEN_PARAMS_START,
       [paramsEndChar]: TOKEN_PARAMS_END,
-      [paramsSeparatorChar]: TOKEN_PARAMS_SEPARATOR
+      [paramsSeparatorChar]: TOKEN_PARAMS_SEPARATOR,
     };
     this.escapingRegExp = this.buildEscapingRegExp();
     this.processorMap = this.buildProcessorMap();
     this.processorAliasMap = this.buildProcessorAliasMap();
   }
 
-  protected buildProcessorMap() {
-    return this.processors.map(it => [it.operator, it] as const).reduce((all, [key, value]) => ({ ...all, [key]: value }), {});
+  protected buildProcessorMap(): Record<string, FilterProcessor> {
+    return this.processors.map((it) => [it.operator, it] as const).reduce((all, [key, value]) => ({ ...all, [key]: value }), {});
   }
 
-  protected buildProcessorAliasMap() {
-    return this.processors.map(it => [it.alias, it] as const).reduce((all, [key, value]) => ({ ...all, [key]: value }), {});
+  protected buildProcessorAliasMap(): Record<string, FilterProcessor> {
+    return this.processors.map((it) => [it.alias, it] as const).reduce((all, [key, value]) => ({ ...all, [key]: value }), {});
   }
 
-  protected buildEscapingRegExp() {
+  protected buildEscapingRegExp(): RegExp {
     const { paramsStartChar, paramsEndChar, paramsSeparatorChar, escapeChar } = this;
-    const escaped = `${paramsStartChar}${paramsEndChar}${paramsSeparatorChar}${escapeChar}`.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const escaped = `${paramsStartChar}${paramsEndChar}${paramsSeparatorChar}${escapeChar}`.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
     return new RegExp(`[${escaped}]`, "g");
   }
 
@@ -93,26 +87,27 @@ export class FilterParser {
 
   protected process(raw: UnprocessedFilter): Filter {
     const { params, op } = raw;
+    if ((op === "and" || op === "or") && params.length === 1) return this.process(params[0] as UnprocessedFilter);
     const processor = this.processorAliasMap[op];
     if (!processor) throw new UnsupportedOperationError(`Unsupported filter operator: ${op}`);
     if (!processor.validateParams(...params)) throw new IllegalArgumentsError(`Invalid filter arguments for filter: ${op}`);
     return processor.process(this.process.bind(this), ...params);
   }
 
-  public parse(filter: string) {
+  public parse(filter: string): Filter {
     const tokens = this.tokenize(filter);
     const segments = this.segment(tokens);
     return this.process(segments);
   }
 
   protected escape(str: string): string {
-    return str.replace(this.escapingRegExp, `${this.escapeChar}$0`);
+    return str.replace(this.escapingRegExp, `\\$&`);
   }
 
   public serialize(filter: Filter): string {
     const { escape, serialize, paramsStartChar, paramsSeparatorChar, paramsEndChar, processorMap } = this;
     const processor = processorMap[filter.op];
-    const [alias, ...params] = [processor.alias, ...processor.serializeParams(serialize.bind(this), filter)].map(escape.bind(this));
+    const [alias, ...params] = [processor.alias, ...processor.serializeParams(serialize.bind(this), escape.bind(this), filter)];
     return [alias, paramsStartChar, params.join(paramsSeparatorChar), paramsEndChar].join("");
   }
 }
